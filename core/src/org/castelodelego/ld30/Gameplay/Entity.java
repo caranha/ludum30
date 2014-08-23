@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import org.castelodelego.ld30.Globals;
 
 /**
  * Created by caranha on 8/23/14.
@@ -23,7 +24,6 @@ public class Entity {
 
     Rectangle hitBox;
     Vector2 position;
-    float rotation;
 
     // timed Attributes
     float lifeTime;
@@ -32,6 +32,11 @@ public class Entity {
     // measured per second;
     float moveSpeed;
     float rotationSpeed;
+    float rotation;
+    Float targetRotation;
+
+    // AI
+    Navigator navigator;
 
 
     boolean destroyFlag;
@@ -48,6 +53,9 @@ public class Entity {
 
         moveSpeed = 0;
         rotationSpeed = 0;
+
+        targetRotation = null;
+        navigator = null;
     }
 
     public void update(float delta)
@@ -55,6 +63,10 @@ public class Entity {
         lifeTime += delta;
         if (lifeTime > maxLife)
             destroyFlag = true;
+
+        if (navigator != null)
+            targetRotation = navigator.getTargetDirection(this);
+
         doMove(delta);
     }
 
@@ -69,7 +81,7 @@ public class Entity {
         Vector2 offset = new Vector2(sprite.getRegionWidth()/2,sprite.getRegionHeight()/2);
 
         batch.setColor(hue); //BR
-        batch.draw(sprite, (position.x - offset.x),(position.y - offset.y),offset.x,offset.y,sprite.getRegionWidth(),sprite.getRegionHeight(),1,1,rotation);
+        batch.draw(sprite, (position.x - offset.x),(position.y - offset.y),offset.x,offset.y,sprite.getRegionWidth(),sprite.getRegionHeight(),1,1,rotation-90);
         batch.setColor(Color.WHITE);
     }
     public void drawDebug(ShapeRenderer renderer) {
@@ -137,18 +149,37 @@ public class Entity {
         return collisionType;
     }
 
+    public void setNavigator(Navigator n) { navigator = n; }
+
+    public void setColor(Color c) { hue = c; }
+    public Color getColor() { return hue; }
 
     public boolean isDestroyed() {
         return destroyFlag;
     }
 
+    void calculateRotation(float delta) {
+        if (targetRotation == null)
+            return;
+
+        float deltaRotation = targetRotation - rotation;
+        deltaRotation += (deltaRotation>180) ? -360 : (deltaRotation<-180) ? 360 : 0;
+
+        if (deltaRotation > 0)
+            rotation = (rotation + rotationSpeed*delta + 360)%360;
+        else
+            rotation = (rotation - rotationSpeed*delta + 360)%360;
+
+        Globals.log.addMessage("currRotation","curr: "+rotation);
+        Globals.log.addMessage("targetRotation","target: "+targetRotation);
+        Globals.log.addMessage("deltaRotation","delta: "+((rotation - targetRotation)%360));
+    }
     void doMove(float delta) {
-        rotation = (rotation + rotationSpeed*delta + 360) % 360;
-        position.x += moveSpeed*delta*MathUtils.sinDeg(rotation)*-1;
-        position.y += moveSpeed*delta*MathUtils.cosDeg(rotation);
+        calculateRotation(delta);
+        position.x += moveSpeed*delta*MathUtils.cosDeg(rotation);
+        position.y += moveSpeed*delta*MathUtils.sinDeg(rotation);
         hitBox.setCenter(position);
     }
-
 
 }
 
