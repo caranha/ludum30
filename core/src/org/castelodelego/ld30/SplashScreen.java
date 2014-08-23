@@ -16,16 +16,16 @@ public class SplashScreen implements Screen {
 	// Variables for drawing the splash screen
 	OrthographicCamera camera;
 	ShapeRenderer lineDrawer;
-	Texture splashimg;	
+	Texture splashImg;
 	float time;
 	float fade;
 	
-	boolean loaddone;
+	boolean loadDone;
 	boolean loadAnimDone;
 	
 	public SplashScreen()
 	{
-		loaddone = false;
+		loadDone = false;
 //		loadAnimDone = false;
 		loadAnimDone = true;
 		
@@ -35,14 +35,14 @@ public class SplashScreen implements Screen {
 		// Loads the splash image (Chooses between the horizontal one and the vertical one)
 		if (Gdx.app.getGraphics().getHeight() > Gdx.app.getGraphics().getWidth())
 		{
-			splashimg = new Texture(Gdx.files.internal("images/backgrounds/splash_vert.png")); 
+			splashImg = new Texture(Gdx.files.internal("images/backgrounds/splash_vert.png"));
 		}
 		else
 		{
-			splashimg = new Texture(Gdx.files.internal("images/backgrounds/splash_hor.png")); 
+			splashImg = new Texture(Gdx.files.internal("images/backgrounds/splash_hor.png"));
 		}
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, splashimg.getWidth(), splashimg.getHeight());		
+		camera.setToOrtho(false, splashImg.getWidth(), splashImg.getHeight());
 
 
 		fade = 0;
@@ -57,7 +57,7 @@ public class SplashScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		// Set loading progress variables
-		loaddone = Globals.manager.update(); // true if all loading is finished	
+		loadDone = Globals.assetManager.update(); // true if all loading is finished
 		//	loadprogress = GdxGameMain.manager.getProgress(); // 0-1 loading progress, if I need a loading bar
 		
 		// load animations
@@ -72,14 +72,14 @@ public class SplashScreen implements Screen {
 		{
 			fade = time*2;
 		}
-		if (time > 1.5 && loaddone && loadAnimDone)
+		if (time > 1.5 && loadDone && loadAnimDone)
 		{
 			fade = fade - delta*3;
 		}
 		
 		Globals.batch.setProjectionMatrix(camera.combined);
 		Globals.batch.begin();
-		Globals.batch.draw(splashimg, 0,0); // TODO: Fix this, splash image off center
+		Globals.batch.draw(splashImg, 0,0);
 		Globals.batch.end();
 		
 		
@@ -91,13 +91,13 @@ public class SplashScreen implements Screen {
 			lineDrawer.setProjectionMatrix(camera.combined);
 			lineDrawer.begin(ShapeType.Filled);
 			lineDrawer.setColor(1f, 1f, 1f, 1-fade);
-			lineDrawer.rect(0, 0, splashimg.getWidth(), splashimg.getHeight());		
+			lineDrawer.rect(0, 0, splashImg.getWidth(), splashImg.getHeight());
 			lineDrawer.end();
 		}
 		// End Drawing Fade
 		
 
-		if ((fade <= 0) && (loaddone))
+		if ((fade <= 0) && (loadDone))
 			((Game) Gdx.app.getApplicationListener()).setScreen(LD30Game.mainScreen);
 	}
 
@@ -133,7 +133,7 @@ public class SplashScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		splashimg.dispose();
+		splashImg.dispose();
 	}
 
 }
