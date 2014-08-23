@@ -66,6 +66,9 @@ public class LD30Game extends Game {
         mainScreen = new MainScreen();
     }
 
+    public static Screen getMainScreen() {
+        return mainScreen;
+    }
 
     @Override
     public void dispose() {

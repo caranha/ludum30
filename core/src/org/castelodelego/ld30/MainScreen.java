@@ -13,8 +13,8 @@ import org.castelodelego.ld30.Gameplay.GameScreen;
 
 public class MainScreen implements Screen {
 
-    ShapeRenderer debugrender = new ShapeRenderer();
     OrthographicCamera menuCamera;
+    Screen lastGameScreen;
 
     BitmapFont menuFont;
     BitmapFont buttonFont;
@@ -55,7 +55,8 @@ public class MainScreen implements Screen {
         // TODO: Main screen should report the coordinates
         if (timeout > 0.2 && Gdx.input.isTouched())
         {
-            ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(new GPSRandom(LD30Game.gps.getLocation())));
+            lastGameScreen = new GameScreen(new GPSRandom(LD30Game.gps.getLocation()));
+            ((Game) Gdx.app.getApplicationListener()).setScreen(lastGameScreen);
         }
 
 	}

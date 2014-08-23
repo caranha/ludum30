@@ -1,5 +1,6 @@
 package org.castelodelego.ld30.Gameplay;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,7 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.castelodelego.ld30.Globals;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by caranha on 8/23/14.
@@ -16,8 +17,9 @@ import org.castelodelego.ld30.Globals;
 public class Entity {
 
 
-    public enum MobType { MOB, BULLET, PICKUP, WALL};
-    MobType collisionType;
+
+    public enum CollisionType { PLAYER, ENEMY, PLAYERBULLET, ENEMYBULLET, WALL, PICKUP, NONE};
+    CollisionType collisionType;
 
     Animation animation;
     Color hue;
@@ -28,6 +30,7 @@ public class Entity {
     // timed Attributes
     float lifeTime;
     float maxLife;
+    int hitPoints;
 
     // measured per second;
     float moveSpeed;
@@ -37,6 +40,7 @@ public class Entity {
 
     // AI
     Navigator navigator;
+    Array<Entity> childArray = null;
 
 
     boolean destroyFlag;
@@ -46,6 +50,7 @@ public class Entity {
     {
         lifeTime = 0;
         maxLife = 30;
+        hitPoints = 1;
 
         hue = Color.RED;
         position = new Vector2();
@@ -60,9 +65,14 @@ public class Entity {
 
     public void update(float delta)
     {
+        if (getDestroyed()) {
+            Gdx.app.log("Entity","Entity tried to update while destroyed: "+this);
+            return;
+        }
+
         lifeTime += delta;
-        if (lifeTime > maxLife)
-            destroyFlag = true;
+        if ((lifeTime > maxLife) || (hitPoints <= 0))
+            setDestroyed();
 
         if (navigator != null)
             targetRotation = navigator.getTargetDirection(this);
@@ -70,13 +80,10 @@ public class Entity {
         doMove(delta);
     }
 
-    public void destroy()
-    {
-
-    }
-
     // TODO: Drawing Routines
     public void draw(SpriteBatch batch) {
+        if (animation == null)
+            return;
         TextureRegion sprite = animation.getKeyFrame(lifeTime);
         Vector2 offset = new Vector2(sprite.getRegionWidth()/2,sprite.getRegionHeight()/2);
 
@@ -90,6 +97,21 @@ public class Entity {
         renderer.rect(hitBox.getX(),hitBox.getY(),hitBox.getWidth(),hitBox.getHeight());
     }
 
+    public void doHit() {
+        hitPoints--;
+    }
+
+    public void doRepulse(Rectangle hitBox) {
+        // TODO: Repuse an entity from a rectangle
+    }
+
+
+    public void setHitPoints(int hit) {
+        hitPoints = hit;
+    }
+    public int getHitPoints() {
+        return hitPoints;
+    }
 
     public void setMoveSpeed(float speed) {
         moveSpeed = speed;
@@ -135,27 +157,47 @@ public class Entity {
     }
 
     public void setAnimation(Animation anim) {
-        System.out.println(anim);
         animation = anim;
     }
     public Animation getAnimation() {
         return animation;
     }
 
-    public void setCollisionType(MobType t) {
+    public void setCollisionType(CollisionType t) {
         collisionType = t;
     }
-    public MobType getCollisionType() {
+    public CollisionType getCollisionType() {
         return collisionType;
     }
 
     public void setNavigator(Navigator n) { navigator = n; }
+    public void setMaxLife(float t) { maxLife = t; }
+
+    public void addChild(Entity e) {
+        if (childArray == null)
+            childArray = new Array<Entity>(false,10);
+        childArray.add(e);
+    }
+    public Array<Entity> getChildArray() {
+        return childArray;
+    }
 
     public void setColor(Color c) { hue = c; }
     public Color getColor() { return hue; }
 
-    public boolean isDestroyed() {
+    public void setDestroyed() {
+        destroyFlag = true;
+    }
+    public boolean getDestroyed() {
         return destroyFlag;
+    }
+
+    public void dispose() {
+        if (navigator != null)
+            navigator.dispose();
+        if (childArray != null)
+            childArray.clear();
+        animation = null;
     }
 
     void calculateRotation(float delta) {
@@ -169,10 +211,6 @@ public class Entity {
             rotation = (rotation + rotationSpeed*delta + 360)%360;
         else
             rotation = (rotation - rotationSpeed*delta + 360)%360;
-
-        Globals.log.addMessage("currRotation","curr: "+rotation);
-        Globals.log.addMessage("targetRotation","target: "+targetRotation);
-        Globals.log.addMessage("deltaRotation","delta: "+((rotation - targetRotation)%360));
     }
     void doMove(float delta) {
         calculateRotation(delta);

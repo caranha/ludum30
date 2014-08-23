@@ -16,8 +16,6 @@ public class PositionNavigator implements Navigator {
             target = new Vector2();
 
         target.set(t);
-
-        Globals.log.addMessage("target","targetPos: "+target);
     }
 
 
@@ -35,5 +33,10 @@ public class PositionNavigator implements Navigator {
         tmp.sub(e.position);
         return tmp.angle();
 
+    }
+
+    public void dispose()
+    {
+        target = null;
     }
 }

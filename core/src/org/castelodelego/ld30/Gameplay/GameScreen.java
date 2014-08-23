@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -22,51 +23,80 @@ import java.util.Iterator;
  */
 public class GameScreen implements com.badlogic.gdx.Screen {
 
-    Array<Entity> entityList;
+    enum GameState { PLAYING, ENDING }
+    GameState gameState;
+    float playTime;
+    float deathTime;
 
+    Array<Entity> entityList;
+    CollisionManager collisionManager = new CollisionManager();
+    BitmapFont joystixMedium = Globals.assetManager.get("Joystix20.ttf",BitmapFont.class);
+
+    PositionNavigator playerControl;
+    Entity player;
+    GPSRandom gpsDice;
+
+    OrthographicCamera uiCamera;
     OrthographicCamera gameCamera;
-    ShapeRenderer debugRenderer;
+
     float worldViewWidth = 480;
     float worldViewHeight = 800;
-    PositionNavigator playerControl;
+
 
     public GameScreen(GPSRandom creator)
     {
+        deathTime = 0;
+        playTime = 0;
+        gameState = GameState.PLAYING;
+        gpsDice = creator;
+
+
         entityList = new Array<Entity>(false,20);
-
         gameCamera = new OrthographicCamera();
+        uiCamera = new OrthographicCamera();
         gameCamera.setToOrtho(false,worldViewWidth,worldViewHeight);
+        uiCamera.setToOrtho(false,worldViewWidth,worldViewHeight);
 
-        debugRenderer = new ShapeRenderer();
+        setupPlayer();
+        setupEnemies();
 
+    }
 
-        Entity test = new Entity();
-        test.setAnimation(Globals.animationManager.get("sprites/player"));
-        test.setPosition(new Vector2(50, 50));
-        test.setHitBoxAnimation();
-        test.setRotation(0);
-        test.setRotationSpeed(90);
-        test.setMoveSpeed(50);
-        test.setColor(Color.WHITE);
+    void setupPlayer()
+    {
+        player = new Entity();
+        player.setAnimation(Globals.animationManager.get("sprites/player"));
+        player.setPosition(new Vector2(0, 0));
+        player.setHitBoxAnimation();
+        player.setRotation(0);
+        player.setRotationSpeed(90);
+        player.setMoveSpeed(50);
+        player.setColor(Color.WHITE);
+        player.setMaxLife(10);
         playerControl = new PositionNavigator();
-        test.setNavigator(playerControl);
+        player.setNavigator(playerControl);
+        player.setCollisionType(Entity.CollisionType.PLAYER);
+        addEntity(player);
+    }
 
-        Entity test2 = new Entity();
-        test2.setAnimation(Globals.animationManager.get("sprites/spearer"));
-        test2.setPosition(new Vector2(400, 400));
-        test2.setHitBoxAnimation();
-        test2.setRotationSpeed(120);
-        test2.setMoveSpeed(10);
-        test2.setColor(Color.BLUE);
-        TargetNavigator playerFollow = new TargetNavigator();
-        playerFollow.setTarget(test);
-        test2.setNavigator(playerFollow);
-
-
-
-        addEntity(test);
-        addEntity(test2);
-
+    void setupEnemies()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            Entity test2 = new Entity();
+            test2.setAnimation(Globals.animationManager.get("sprites/spearer"));
+            test2.setPosition(new Vector2(player.getPosition().x+gpsDice.nextInt(500)-250, player.getPosition().y+gpsDice.nextInt(500)-250));
+            test2.setHitBoxAnimation();
+            test2.setRotationSpeed(120);
+            test2.setMoveSpeed(10);
+            test2.setColor(Color.BLUE);
+            test2.setMaxLife(5);
+            TargetNavigator playerFollow = new TargetNavigator();
+            playerFollow.setTarget(player);
+            test2.setNavigator(playerFollow);
+            test2.setCollisionType(Entity.CollisionType.ENEMY);
+            addEntity(test2);
+        }
     }
 
 
@@ -74,6 +104,7 @@ public class GameScreen implements com.badlogic.gdx.Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        playTime = playTime+delta;
 
         if (Gdx.input.isTouched())
         {
@@ -81,18 +112,70 @@ public class GameScreen implements com.badlogic.gdx.Screen {
             playerControl.setTarget(new Vector2(touchPos.x,touchPos.y));
         }
 
+        switch (gameState)
+        {
+            case PLAYING:
+                if (player.getDestroyed()) {
+                    deathTime = playTime;
+                    gameState = GameState.ENDING;
+                }
+                break;
+            case ENDING:
+                if (playTime - deathTime > 1) {
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(LD30Game.getMainScreen());
+                }
 
+                break;
+        }
+
+        processEntities(delta);
+        renderText(delta);
+        renderSprites(delta);
+        renderDebug(delta);
+
+    }
+
+    private void processEntities(float delta) {
+        Array<Entity> newEntities = new Array<Entity>();
+
+        collisionManager.doCollisions();
+
+        for (Entity aux:entityList) {
+            aux.update(delta);
+            Array<Entity> children = aux.getChildArray();
+            if (children != null) {
+                for (Entity aux2 : children)
+                    newEntities.add(aux2);
+                children.clear();
+            }
+        }
 
         Iterator<Entity> it = entityList.iterator();
         while (it.hasNext())
         {
             Entity aux = it.next();
-            aux.update(delta);
+            if (aux.getDestroyed())
+            {
+                collisionManager.removeEntity(aux);
+                aux.dispose();
+                it.remove();
+            }
         }
 
+        for (Entity aux:newEntities)
+            addEntity(aux);
 
-        renderSprites(delta);
-        renderDebug(delta);
+        gameCamera.translate(player.position.x - gameCamera.position.x, player.position.y - gameCamera.position.y);
+        gameCamera.update();
+    }
+
+
+    private void renderText(float delta) {
+        Globals.batch.setProjectionMatrix(uiCamera.combined);
+        Globals.batch.begin();
+            if (player.getDestroyed())
+                joystixMedium.draw(Globals.batch,"You're Dead",100,uiCamera.viewportHeight/4);
+        Globals.batch.end();
     }
 
 
@@ -106,19 +189,20 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         Globals.batch.end();
     }
     private void renderDebug(float delta) {
-        debugRenderer.setProjectionMatrix(gameCamera.combined);
-        debugRenderer.begin(ShapeRenderer.ShapeType.Line);
+        Globals.debugRenderer.setProjectionMatrix(gameCamera.combined);
+        Globals.debugRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (Entity aux:entityList)
         {
-            aux.drawDebug(debugRenderer);
+            aux.drawDebug(Globals.debugRenderer);
         }
-        debugRenderer.end();
+        Globals.debugRenderer.end();
     }
 
 
     public void addEntity(Entity e)
     {
         entityList.add(e);
+        collisionManager.addEntity(e);
     }
 
 

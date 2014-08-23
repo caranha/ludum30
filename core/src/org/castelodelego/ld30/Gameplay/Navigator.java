@@ -6,5 +6,6 @@ package org.castelodelego.ld30.Gameplay;
 public interface Navigator {
 
     public Float getTargetDirection(Entity e);
+    public void dispose();
 
 }

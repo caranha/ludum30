@@ -80,7 +80,7 @@ public class SplashScreen implements Screen {
                         }
                 break;
             case DONE:
-                    ((Game) Gdx.app.getApplicationListener()).setScreen(LD30Game.mainScreen);
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(LD30Game.getMainScreen());
                 break;
         }
 

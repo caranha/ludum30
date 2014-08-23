@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 
 /**
@@ -23,21 +24,22 @@ public class Globals {
 		
 	public static AssetManager assetManager;
 	public static AnimationManager animationManager;
-	public static SpriteBatch batch;
-    static OrthographicCamera globalcam;
+
+    public static SpriteBatch batch;
+    public static ShapeRenderer debugRenderer;
+
 
 	public static Random behaviorDice;
-
-	public static BitmapFont debugText;
     public static LogOverlay log;
 	
 	
 	static void init()
 	{
-		debugText = new BitmapFont();
-		batch = new SpriteBatch();
 		animationManager = new AnimationManager();
 		assetManager = new AssetManager();
+
+        batch = new SpriteBatch();
+        debugRenderer = new ShapeRenderer();
 
         FileHandleResolver resolver = new InternalFileHandleResolver();
         assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));

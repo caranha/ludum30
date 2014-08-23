@@ -23,4 +23,9 @@ public class TargetNavigator implements Navigator {
             return tmp.angle();
         }
     }
+
+    public void dispose()
+    {
+        target = null;
+    }
 }
