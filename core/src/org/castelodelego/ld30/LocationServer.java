@@ -13,8 +13,9 @@ public interface LocationServer {
      */
     double[] getLocation();
 
+    String getLocationString();
+
     void pauseService();
     void restartService();
-
 
 }

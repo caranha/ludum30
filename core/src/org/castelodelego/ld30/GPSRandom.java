@@ -9,14 +9,9 @@ public class GPSRandom {
 
     private Random dice;
 
-    public GPSRandom()
+    public GPSRandom(double[] pos)
     {
-        dice = new Random();
-    }
-
-    public void reset(double lon, double lat)
-    {
-        dice.setSeed((long)(lon*1000)*(long)(lat*1000));
+        dice = new Random((long)(pos[0]*1000)*(long)(pos[1]*1000));
     }
 
     public int nextInt(int n)

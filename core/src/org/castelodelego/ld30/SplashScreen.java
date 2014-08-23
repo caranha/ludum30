@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
@@ -19,17 +20,13 @@ public class SplashScreen implements Screen {
 	Texture splashImg;
 	float time;
 	float fade;
-	
-	boolean loadDone;
-	boolean loadAnimDone;
-	
+
+    enum Stage { LOAD_ASSETS, LOAD_ANIMATION, LOAD_SCREENS, FADE_OUT, DONE};
+    Stage currentStage;
+
 	public SplashScreen()
 	{
-		loadDone = false;
-//		loadAnimDone = false;
-		loadAnimDone = true;
-		
-
+        currentStage = Stage.LOAD_ASSETS;
 		lineDrawer = new ShapeRenderer();
 		
 		// Loads the splash image (Chooses between the horizontal one and the vertical one)
@@ -43,8 +40,6 @@ public class SplashScreen implements Screen {
 		}
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, splashImg.getWidth(), splashImg.getHeight());
-
-
 		fade = 0;
 	}
 	
@@ -55,35 +50,45 @@ public class SplashScreen implements Screen {
 		// Clear the screen
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		// Set loading progress variables
-		loadDone = Globals.assetManager.update(); // true if all loading is finished
-		//	loadprogress = GdxGameMain.manager.getProgress(); // 0-1 loading progress, if I need a loading bar
-		
-		// load animations
-//		if (loaddone == true && loadAnimDone == false)
-//		{	
-//			loadAnimDone = (Globals.animman.loadAnimations(Globals.manager.get("images-packed/pack.atlas", TextureAtlas.class),delta));
-//		}
-		
-		// splash screen fade crontrol
-		time = time+delta;		
-		if (time < 0.5)
-		{
-			fade = time*2;
-		}
-		if (time > 1.5 && loadDone && loadAnimDone)
-		{
-			fade = fade - delta*3;
-		}
-		
+        time = time + delta;
+
+        switch (currentStage)
+        {
+
+            case LOAD_ASSETS:
+                fade = (fade >= 1?1:time*2);
+
+                if (Globals.assetManager.update() && fade >= 1)
+                    currentStage = Stage.LOAD_ANIMATION;
+
+                break;
+            case LOAD_ANIMATION:
+                if (Globals.animationManager.loadAnimations(Globals.assetManager.get("images/pack.atlas", TextureAtlas.class),delta))
+                    currentStage = Stage.LOAD_SCREENS;
+                break;
+            case LOAD_SCREENS:
+                    LD30Game.loadScreens();
+                    if (time > 1.5)
+                        currentStage = Stage.FADE_OUT;
+                break;
+            case FADE_OUT:
+                    fade = fade - delta*3;
+                    if (fade <= 0)
+                        {
+                            fade = 0;
+                            currentStage = Stage.DONE;
+                        }
+                break;
+            case DONE:
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(LD30Game.mainScreen);
+                break;
+        }
+
 		Globals.batch.setProjectionMatrix(camera.combined);
 		Globals.batch.begin();
 		Globals.batch.draw(splashImg, 0,0);
 		Globals.batch.end();
-		
-		
-		// Drawing Fade
+
 		if (fade < 1.0f)
 		{
 			Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -94,11 +99,7 @@ public class SplashScreen implements Screen {
 			lineDrawer.rect(0, 0, splashImg.getWidth(), splashImg.getHeight());
 			lineDrawer.end();
 		}
-		// End Drawing Fade
-		
 
-		if ((fade <= 0) && (loadDone))
-			((Game) Gdx.app.getApplicationListener()).setScreen(LD30Game.mainScreen);
 	}
 
 	@Override

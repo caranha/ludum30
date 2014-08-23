@@ -1,71 +1,91 @@
 package org.castelodelego.ld30;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import org.castelodelego.ld30.Gameplay.GameScreen;
 
 
 public class MainScreen implements Screen {
 
     ShapeRenderer debugrender = new ShapeRenderer();
+    OrthographicCamera menuCamera;
+
+    BitmapFont menuFont;
+    BitmapFont buttonFont;
+
+    float timeout;
+
+    public MainScreen()
+    {
+        menuCamera = new OrthographicCamera();
+        menuCamera.setToOrtho(false, 480,800);
+
+        menuFont = Globals.assetManager.get("Joystix40.ttf",BitmapFont.class);
+        buttonFont = Globals.assetManager.get("Joystix20.ttf",BitmapFont.class);
+
+    }
+
+
 
 
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(1, 0, 0, 0);
+		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        timeout += delta;
 
-        debugrender.setProjectionMatrix(LD30Game.globalcam.combined);
-        debugrender.begin(ShapeRenderer.ShapeType.Filled);
-        debugrender.setColor(Color.BLACK);
-        debugrender.rect(10, 10, 50, 50);
-        debugrender.rect(480-60,800-60,50,50);
-        debugrender.end();
+        Globals.batch.begin();
+        menuFont.setColor(Color.RED);
+        menuFont.draw(Globals.batch, "GeoQuest", 100, menuCamera.viewportHeight-100);
+        buttonFont.draw(Globals.batch, "Click here to Start", 100, menuCamera.viewportHeight-200);
+        buttonFont.setColor(Color.RED);
+        buttonFont.draw(Globals.batch, LD30Game.gps.getLocationString(), 10, 30);
+        Globals.batch.end();
 
-        double[] location = LD30Game.gps.getLocation();
-        Globals.log.addMessage("Longitute","lon: "+location[0]);
-        Globals.log.addMessage("Latitude","lat:"+location[1]);
-        Globals.log.addMessage("Provider",LD30Game.gps.toString());
+
+
+        // TODO: Main screen should take the player to: about, scores (achievements), embark here!
+        // TODO: Main screen should report the coordinates
+        if (timeout > 0.2 && Gdx.input.isTouched())
+        {
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(new GPSRandom(LD30Game.gps.getLocation())));
+        }
 
 	}
 
 	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-
-	}
+	public void resize(int width, int height) {}
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-
+        timeout = 0;
 	}
 
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-
 	}
 
 }

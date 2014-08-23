@@ -71,6 +71,15 @@ public class AndroidLocation implements LocationServer {
     }
 
     @Override
+    public String getLocationString() {
+
+        return new StringBuilder()
+                .append("Lon: ").append(String.format("%.4g%n", lastKnownLocation.getLongitude()))
+                .append( " Lat:").append(String.format("%.4g%n", lastKnownLocation.getLatitude()))
+                .toString();
+    }
+
+    @Override
     public void pauseService() {
         locationManager.removeUpdates(locationListener);
     }

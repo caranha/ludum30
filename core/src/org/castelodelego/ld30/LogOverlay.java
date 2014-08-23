@@ -6,13 +6,20 @@ package org.castelodelego.ld30;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class LogOverlay {
-Map<String,String> messages;
+    Map<String,String> messages;
+    OrthographicCamera logCamera;
+
+
     public LogOverlay()
     {
         messages = new HashMap<String,String>();
+        logCamera = new OrthographicCamera();
+        logCamera.setToOrtho(false, 480, 800);
     }
 
     public void addMessage(String key, String message)
@@ -27,7 +34,7 @@ Map<String,String> messages;
 
     public void render()
     {
-        Globals.batch.setProjectionMatrix(LD30Game.globalcam.combined);
+        Globals.batch.setProjectionMatrix(logCamera.combined);
         Globals.batch.begin();
         Globals.debugText.setColor(Color.YELLOW);
 
@@ -35,7 +42,7 @@ Map<String,String> messages;
         for (String message:messages.values())
         {
             /// FIXME: Replace top height with the height of the globalcam
-            Globals.debugText.draw(Globals.batch, message, 0, 800 - lineSkip);
+            Globals.debugText.draw(Globals.batch, message, 0, logCamera.viewportHeight - lineSkip);
             lineSkip += 15;
         }
         Globals.batch.end();

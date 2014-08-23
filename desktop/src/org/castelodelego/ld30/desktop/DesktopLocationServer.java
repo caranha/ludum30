@@ -28,6 +28,11 @@ public class DesktopLocationServer implements LocationServer {
     }
 
     @Override
+    public String getLocationString() {
+        return "Desktop Play! Location is Randomized.";
+    }
+
+    @Override
     public void pauseService() {
     }
 

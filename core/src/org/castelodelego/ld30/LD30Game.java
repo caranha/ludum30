@@ -5,12 +5,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 
 public class LD30Game extends Game {
 
     static Screen splashScreen;
     static Screen mainScreen;
-    static OrthographicCamera globalcam;
     static LocationServer gps;
 
     public LD30Game(LocationServer g)
@@ -31,11 +34,6 @@ public class LD30Game extends Game {
         queueAssets();
 
         splashScreen = new SplashScreen();
-        mainScreen = new MainScreen();
-
-        globalcam = new OrthographicCamera();
-        globalcam.setToOrtho(false, 480, 800);
-
         setScreen(splashScreen);
     }
 
@@ -45,8 +43,29 @@ public class LD30Game extends Game {
      */
     private void queueAssets()
     {
-        //		Globals.manager.load("images-packed/pack.atlas", TextureAtlas.class); // packed images
+        // Loading Images
+        Globals.assetManager.load("images/pack.atlas", TextureAtlas.class); // packed images
+
+        FreeTypeFontLoaderParameter fontParams;
+        // Loading fonts and generating size variations
+
+        fontParams = new FreeTypeFontLoaderParameter();
+        fontParams.fontFileName = "fonts/Joystix.ttf";
+        fontParams.fontParameters.size = 20;
+        Globals.assetManager.load("Joystix20.ttf", BitmapFont.class, fontParams);
+
+        fontParams = new FreeTypeFontLoaderParameter();
+        fontParams.fontFileName = "fonts/Joystix.ttf";
+        fontParams.fontParameters.size = 40;
+        Globals.assetManager.load("Joystix40.ttf", BitmapFont.class, fontParams);
+
     }
+
+    public static void loadScreens()
+    {
+        mainScreen = new MainScreen();
+    }
+
 
     @Override
     public void dispose() {
@@ -62,7 +81,6 @@ public class LD30Game extends Game {
 
         // Uncomment for FPS
         Globals.log.addMessage("FPS", "FPS: "+Gdx.graphics.getFramesPerSecond());
-        Globals.log.addMessage("test", "Hello World");
         Globals.log.render();
 
     }
