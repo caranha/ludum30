@@ -69,10 +69,10 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         player.setPosition(new Vector2(0, 0));
         player.setHitBoxAnimation();
         player.setRotation(0);
-        player.setRotationSpeed(90);
-        player.setMoveSpeed(50);
+        player.setRotationSpeed(120);
+        player.setMoveSpeed(120);
         player.setColor(Color.WHITE);
-        player.setMaxLife(10);
+        player.setMaxLife(60);
         playerControl = new PositionNavigator();
         player.setNavigator(playerControl);
         player.setCollisionType(Entity.CollisionType.PLAYER);
@@ -81,22 +81,36 @@ public class GameScreen implements com.badlogic.gdx.Screen {
 
     void setupEnemies()
     {
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 1; i++)
         {
             Entity test2 = new Entity();
             test2.setAnimation(Globals.animationManager.get("sprites/spearer"));
             test2.setPosition(new Vector2(player.getPosition().x+gpsDice.nextInt(500)-250, player.getPosition().y+gpsDice.nextInt(500)-250));
             test2.setHitBoxAnimation();
-            test2.setRotationSpeed(120);
-            test2.setMoveSpeed(10);
+            test2.setRotationSpeed(100);
+            test2.setMoveSpeed(100);
             test2.setColor(Color.BLUE);
-            test2.setMaxLife(5);
+            test2.setMaxLife(30);
             TargetNavigator playerFollow = new TargetNavigator();
             playerFollow.setTarget(player);
             test2.setNavigator(playerFollow);
             test2.setCollisionType(Entity.CollisionType.ENEMY);
             addEntity(test2);
         }
+
+        for (int i = 0; i < 4; i++)
+        {
+            Entity test2 = new Entity();
+            test2.setAnimation(Globals.animationManager.get("props/wall_1x2"));
+            test2.setPosition(new Vector2(player.getPosition().x + gpsDice.nextInt(500) - 250, player.getPosition().y + gpsDice.nextInt(500) - 250));
+            test2.setHitBoxAnimation();
+            test2.setColor(Color.GREEN);
+            test2.setMaxLife(8000);
+            test2.setRotation(90);
+            test2.setCollisionType(Entity.CollisionType.WALL);
+            addEntity(test2);
+        }
+
     }
 
 

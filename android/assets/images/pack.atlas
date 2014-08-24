@@ -1,0 +1,31 @@
+
+pack.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+sprites/player
+  rotate: false
+  xy: 2, 2
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: 0
+sprites/spearer
+  rotate: false
+  xy: 44, 22
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: 0
+
+pack2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+props/wall_1x2
+  rotate: false
+  xy: 2, 2
+  size: 30, 60
+  orig: 30, 60
+  offset: 0, 0
+  index: 0

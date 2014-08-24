@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -80,7 +81,6 @@ public class Entity {
         doMove(delta);
     }
 
-    // TODO: Drawing Routines
     public void draw(SpriteBatch batch) {
         if (animation == null)
             return;
@@ -100,9 +100,23 @@ public class Entity {
     public void doHit() {
         hitPoints--;
     }
+    public void doRepulse(Rectangle hit) {
+        //FIXME: Sometimes jump-glitches happen
+        Rectangle repulse = new Rectangle();
+        Intersector.intersectRectangles(this.hitBox,hit,repulse);
 
-    public void doRepulse(Rectangle hitBox) {
-        // TODO: Repuse an entity from a rectangle
+        if (repulse.width < repulse.height) {
+            if (hitBox.x < hit.x)
+                position.x -= repulse.width;
+            else
+                position.y += repulse.width;
+        } else {
+            if (hitBox.y < hit.y)
+                position.y -= repulse.height;
+            else
+                position.y += repulse.height;
+        }
+        hitBox.setCenter(position);
     }
 
 

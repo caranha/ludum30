@@ -105,7 +105,13 @@ public class CollisionManager {
         for (Entity aux1:enemies) {
             for (Entity aux2:walls)
             {
-
+                if (aux1.getHitBox().overlaps(aux2.getHitBox()))
+                {
+                    if (aux1.getCollisionType() == Entity.CollisionType.ENEMY)
+                        aux1.doRepulse(aux2.getHitBox());
+                    else
+                        aux1.doHit();
+                }
             }
         }
     }
