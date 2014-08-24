@@ -17,10 +17,10 @@ public class EntityPlayer extends Entity {
     float yLimit;
     boolean escaped = false;
 
-    boolean hasArmor = false;
-    boolean hasSpeed = false;
-    boolean hasTurn = false;
-    boolean hasWeapon = false;
+    public boolean hasArmor = false;
+    public boolean hasSpeed = false;
+    public boolean hasTurn = false;
+    public boolean hasWeapon = false;
 
     Animation layer_armor;
     Animation layer_shoot;

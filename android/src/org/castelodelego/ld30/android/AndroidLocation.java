@@ -74,8 +74,8 @@ public class AndroidLocation implements LocationServer {
     public String getLocationString() {
 
         return new StringBuilder()
-                .append("Lon: ").append(String.format("%.4g%n", lastKnownLocation.getLongitude()))
-                .append( " Lat:").append(String.format("%.4g%n", lastKnownLocation.getLatitude()))
+                .append("Lon: ").append(String.format("%.4f", lastKnownLocation.getLongitude()))
+                .append( " Lat:").append(String.format("%.4f", lastKnownLocation.getLatitude()))
                 .toString();
     }
 
