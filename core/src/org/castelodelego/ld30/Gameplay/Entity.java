@@ -22,6 +22,7 @@ public class Entity {
     CollisionType collisionType;
 
     Animation animation;
+    Animation deathAnimation = null;
     Color hue;
 
     Rectangle hitBox;
@@ -206,10 +207,31 @@ public class Entity {
         if ((deathSound != null) && (destroyFlag==false))
             deathSound.play();
         destroyFlag = true;
+
+        if (deathAnimation!= null)
+        {
+            Entity w = new Entity();
+            w.setAnimation(deathAnimation);
+            w.setHitBoxAnimation();
+            w.setMoveSpeed(this.moveSpeed/3);
+            w.setRotation(this.rotation);
+            w.setPosition(this.position);
+            w.setColor(getColor());
+            w.setMaxLife(0.4f);
+            w.setCollisionType(CollisionType.NONE);
+            addChild(w);
+        }
+
+
+
     }
     public boolean getDestroyed() {
         return destroyFlag;
     }
+    public void setDeathAnim(Animation death) {
+        deathAnimation = death;
+    }
+
 
     public void setPickup(Pickup p) { pickup = p;}
     public Pickup getPickup() { return pickup; }

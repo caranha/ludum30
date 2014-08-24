@@ -44,6 +44,7 @@ public class PlayerGun {
         ret.setColor(Color.WHITE);
         ret.setPosition(p.getPosition());
         ret.setCollisionType(Entity.CollisionType.PLAYERBULLET);
+        ret.setDeathAnim(Globals.animationManager.get("sprites/bullet_death"));
         return ret;
     }
 }

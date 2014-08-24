@@ -40,6 +40,7 @@ public class EntityFactory {
         ret.setNavigator(new LazyNavigator(p,200+40*difficulty,(difficulty > 2?true:false)));
         ret.setCollisionType(Entity.CollisionType.ENEMY);
         ret.setDeathSound(Globals.assetManager.get("sounds/Death_Enemy.ogg", Sound.class));
+        ret.setDeathAnim(Globals.animationManager.get("sprites/enemy_death"));
         return ret;
     }
 
@@ -111,6 +112,7 @@ public class EntityFactory {
         ret.setMaxLife(FOREVER);
         ret.setCollisionType(Entity.CollisionType.WALL);
         ret.setDeathSound(Globals.assetManager.get("sounds/Unlock.ogg", Sound.class));
+        ret.setDeathAnim(Globals.animationManager.get("sprites/door_death"));
         return ret;
     }
 

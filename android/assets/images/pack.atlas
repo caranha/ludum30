@@ -27,6 +27,27 @@ pack3.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+sprites/bullet_death
+  rotate: false
+  xy: 104, 7
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: 0
+sprites/bullet_death
+  rotate: false
+  xy: 236, 17
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: 1
+sprites/bullet_death
+  rotate: false
+  xy: 116, 7
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: 2
 sprites/diamond
   rotate: false
   xy: 2, 2
@@ -43,98 +64,161 @@ sprites/diamond
   index: 1
 sprites/diamond
   rotate: false
-  xy: 110, 12
+  xy: 36, 2
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: 2
 sprites/diamond
   rotate: false
-  xy: 127, 12
+  xy: 53, 2
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: 3
-sprites/key
+sprites/door_death
   rotate: false
   xy: 2, 19
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: 0
+sprites/door_death
+  rotate: false
+  xy: 44, 19
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: 1
+sprites/door_death
+  rotate: false
+  xy: 86, 19
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: 2
+sprites/enemy_death
+  rotate: false
+  xy: 70, 2
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 0
+sprites/enemy_death
+  rotate: false
+  xy: 87, 2
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 2
+sprites/key
+  rotate: false
+  xy: 128, 19
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: 0
 sprites/player
   rotate: false
-  xy: 44, 29
+  xy: 170, 29
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: 0
 sprites/player_armor
   rotate: false
-  xy: 76, 29
+  xy: 202, 29
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: 0
+sprites/player_death
+  rotate: false
+  xy: 234, 29
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+sprites/player_death
+  rotate: false
+  xy: 266, 29
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 1
+sprites/player_death
+  rotate: false
+  xy: 298, 29
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 2
+sprites/player_death
+  rotate: false
+  xy: 330, 29
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 3
 sprites/player_shoot
   rotate: false
-  xy: 108, 29
+  xy: 362, 29
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: 0
 sprites/player_speed
   rotate: false
-  xy: 140, 29
+  xy: 394, 29
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: 0
 sprites/player_turn
   rotate: false
-  xy: 172, 29
+  xy: 426, 29
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: 0
 sprites/playerbullet
   rotate: false
-  xy: 204, 30
+  xy: 458, 30
   size: 7, 7
   orig: 7, 7
   offset: 0, 0
   index: 0
 sprites/pup_defense
   rotate: false
-  xy: 204, 39
+  xy: 458, 39
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: 0
 sprites/pup_shoot
   rotate: false
-  xy: 226, 39
+  xy: 480, 39
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: 0
 sprites/pup_speed
   rotate: false
-  xy: 44, 7
+  xy: 170, 7
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: 0
 sprites/pup_turn
   rotate: false
-  xy: 66, 7
+  xy: 192, 7
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: 0
 sprites/spearer
   rotate: false
-  xy: 88, 7
+  xy: 214, 7
   size: 20, 20
   orig: 20, 20
   offset: 0, 0

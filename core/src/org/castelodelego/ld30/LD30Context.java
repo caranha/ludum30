@@ -114,6 +114,7 @@ public enum LD30Context {
         ret.setHitPoints(3);
         ret.setCollisionType(Entity.CollisionType.PLAYER);
         ret.setDeathSound(Globals.assetManager.get("sounds/Death.ogg", Sound.class));
+        ret.setDeathAnim(Globals.animationManager.get("sprites/player_death"));
         return ret;
     }
 
