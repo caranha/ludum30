@@ -31,7 +31,12 @@ public class PopulationFactory {
             ret.add(w);
         }
 
-        //TODO add pickups
+        if (dice.nextDouble() < 0.5) {
+            Entity w = EntityFactory.powerUp(dice);
+            w.setPosition(new Vector2(dice.nextInt(300 + 150), dice.nextInt(300 + 150)));
+            ret.add(w);
+        }
+
         return ret;
     }
 
@@ -57,6 +62,13 @@ public class PopulationFactory {
         Entity w = EntityFactory.key(color+1);
         w.setPosition(new Vector2(dice.nextInt(300+150),dice.nextInt(300+150)));
         ret.add(w);
+
+        if (dice.nextDouble() < 0.5) {
+            w = EntityFactory.powerUp(dice);
+            w.setPosition(new Vector2(dice.nextInt(300 + 150), dice.nextInt(300 + 150)));
+            ret.add(w);
+        }
+
         return ret;
     }
 
@@ -78,6 +90,14 @@ public class PopulationFactory {
         ret.add(w);
 
         w = EntityFactory.key(color+2);
+        w.setPosition(new Vector2(dice.nextInt(300+150),dice.nextInt(300+150)));
+        ret.add(w);
+
+        w = EntityFactory.powerUp(dice);
+        w.setPosition(new Vector2(dice.nextInt(300+150),dice.nextInt(300+150)));
+        ret.add(w);
+
+        w = EntityFactory.powerUp(dice);
         w.setPosition(new Vector2(dice.nextInt(300+150),dice.nextInt(300+150)));
         ret.add(w);
 

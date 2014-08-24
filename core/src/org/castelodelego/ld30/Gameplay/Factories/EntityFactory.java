@@ -2,6 +2,7 @@ package org.castelodelego.ld30.Gameplay.Factories;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import org.castelodelego.ld30.GPSRandom;
 import org.castelodelego.ld30.Gameplay.*;
 import org.castelodelego.ld30.Globals;
 import org.castelodelego.ld30.LD30Context;
@@ -59,6 +60,41 @@ public class EntityFactory {
         ret.setPickup(new Pickup(Pickup.PickupType.DIAMOND,0,null));
         ret.setMaxLife(FOREVER);
         ret.setCollisionType(Entity.CollisionType.PICKUP);
+        return ret;
+    }
+
+    public static Entity powerUp(GPSRandom dice)
+    {
+        int type = dice.nextInt(4);
+        Entity ret = new Entity();
+        ret.setHitBoxSize(18,18);
+        ret.setCollisionType(Entity.CollisionType.PICKUP);
+        ret.setMaxLife(FOREVER);
+
+        switch(type)
+        {
+            case 0:
+                ret.setAnimation(Globals.animationManager.get("sprites/pup_defense"));
+                ret.setColor(Color.WHITE);
+                ret.setPickup(new Pickup(Pickup.PickupType.SHIELD,0,null));
+                break;
+            case 1:
+                ret.setAnimation(Globals.animationManager.get("sprites/pup_shoot"));
+                ret.setColor(Color.PURPLE);
+                ret.setPickup(new Pickup(Pickup.PickupType.SHOOTER,0,null));
+                break;
+            case 2:
+                ret.setAnimation(Globals.animationManager.get("sprites/pup_speed"));
+                ret.setColor(Color.GRAY);
+                ret.setPickup(new Pickup(Pickup.PickupType.SPEED_UP,0,null));
+                break;
+            case 3:
+                ret.setAnimation(Globals.animationManager.get("sprites/pup_turn"));
+                ret.setColor(Color.PINK);
+                ret.setPickup(new Pickup(Pickup.PickupType.TURN_UP,0,null));
+                break;
+        }
+
         return ret;
     }
 

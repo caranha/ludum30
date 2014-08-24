@@ -1,6 +1,10 @@
 package org.castelodelego.ld30.Gameplay;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import org.castelodelego.ld30.Globals;
 import org.castelodelego.ld30.LD30Context;
 
@@ -13,11 +17,28 @@ public class EntityPlayer extends Entity {
     float yLimit;
     boolean escaped = false;
 
+    boolean hasArmor = false;
+    boolean hasSpeed = false;
+    boolean hasTurn = false;
+    boolean hasWeapon = false;
+
+    Animation layer_armor;
+    Animation layer_shoot;
+    Animation layer_speed;
+    Animation layer_turn;
+
+    PlayerGun playerGun;
+
     public EntityPlayer(float maxWidth, float maxHeight)
     {
         super();
         xLimit = maxWidth;
         yLimit = maxHeight;
+
+        layer_armor = Globals.animationManager.get("sprites/player_armor");
+        layer_shoot = Globals.animationManager.get("sprites/player_shoot");
+        layer_speed = Globals.animationManager.get("sprites/player_speed");
+        layer_turn = Globals.animationManager.get("sprites/player_turn");
     }
 
     @Override
@@ -28,6 +49,9 @@ public class EntityPlayer extends Entity {
         if (position.x > xLimit) position.x = xLimit;
         if (position.y < 0) position.y = 0;
         if (position.y > yLimit) position.y = yLimit;
+
+        if (playerGun != null)
+            playerGun.update(delta,this);
     }
 
 
@@ -52,16 +76,49 @@ public class EntityPlayer extends Entity {
                 break;
 
             case SHOOTER:
-                TextRenderer.addMessage("Pew! Pew! Pew!");
+                if (!hasWeapon) {
+                    TextRenderer.addMessage("Pew! Pew! Pew!");
+                    playerGun = new PlayerGun();
+                }
+                else {
+                    LD30Context.getInstance().addPickup(goodies);
+                    TextRenderer.addMessage("You can't handle two guns!");
+                }
                 break;
+
             case SPEED_UP:
-                TextRenderer.addMessage("Go Faster!");
+                if (!hasSpeed) {
+                    TextRenderer.addMessage("Go Faster!");
+                    hasSpeed = true;
+                    moveSpeed += 50;
+                }
+                else {
+                    LD30Context.getInstance().addPickup(goodies);
+                    TextRenderer.addMessage("You're already fast!");
+                }
                 break;
+
             case TURN_UP:
-                TextRenderer.addMessage("Wheeeee!");
+                if (!hasTurn) {
+                    hasTurn = true;
+                    rotationSpeed += 90;
+                    TextRenderer.addMessage("Wheeeee!");
+                }
+                else {
+                    LD30Context.getInstance().addPickup(goodies);
+                    TextRenderer.addMessage("I'm getting sick...");
+                }
                 break;
+
             case SHIELD:
-                TextRenderer.addMessage("No one can touch you now!");
+                if (!hasArmor) {
+                    hasArmor = true;
+                    hitPoints += 5;
+                    TextRenderer.addMessage("No one can touch you now!");
+                } else {
+                    LD30Context.getInstance().addPickup(goodies);
+                    TextRenderer.addMessage("What are you, a Shuckle?");
+                }
                 break;
 
             case DIAMOND:
@@ -99,6 +156,40 @@ public class EntityPlayer extends Entity {
         escaped = false;
         lifeTime = 0;
         hitPoints = 3;
+        if (hasArmor)
+            hitPoints = 8;
         rotation = 0;
+    }
+
+    @Override
+    public void draw(SpriteBatch batch)
+    {
+        super.draw(batch);
+        if (hasArmor) {
+            TextureRegion sprite = layer_armor.getKeyFrame(lifeTime);
+            Vector2 offset = new Vector2(sprite.getRegionWidth() / 2, sprite.getRegionHeight() / 2);
+            batch.draw(sprite, (position.x - offset.x), (position.y - offset.y), offset.x, offset.y, sprite.getRegionWidth(), sprite.getRegionHeight(), 1, 1, rotation - 90);
+        }
+
+        if (hasSpeed) {
+            TextureRegion sprite = layer_speed.getKeyFrame(lifeTime);
+            Vector2 offset = new Vector2(sprite.getRegionWidth() / 2, sprite.getRegionHeight() / 2);
+            batch.draw(sprite, (position.x - offset.x), (position.y - offset.y), offset.x, offset.y, sprite.getRegionWidth(), sprite.getRegionHeight(), 1, 1, rotation - 90);
+        }
+
+        if (hasWeapon) {
+            TextureRegion sprite = layer_shoot.getKeyFrame(lifeTime);
+            Vector2 offset = new Vector2(sprite.getRegionWidth() / 2, sprite.getRegionHeight() / 2);
+            batch.draw(sprite, (position.x - offset.x), (position.y - offset.y), offset.x, offset.y, sprite.getRegionWidth(), sprite.getRegionHeight(), 1, 1, rotation - 90);
+        }
+
+        if (hasTurn) {
+            TextureRegion sprite = layer_turn.getKeyFrame(lifeTime);
+            Vector2 offset = new Vector2(sprite.getRegionWidth() / 2, sprite.getRegionHeight() / 2);
+            batch.draw(sprite, (position.x - offset.x), (position.y - offset.y), offset.x, offset.y, sprite.getRegionWidth(), sprite.getRegionHeight(), 1, 1, rotation - 90);
+        }
+
+
+
     }
 }

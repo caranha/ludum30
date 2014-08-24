@@ -36,21 +36,21 @@ sprites/diamond
   index: 0
 sprites/diamond
   rotate: false
-  xy: 98, 44
+  xy: 19, 2
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: 1
 sprites/diamond
   rotate: false
-  xy: 19, 2
+  xy: 110, 12
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: 2
 sprites/diamond
   rotate: false
-  xy: 44, 12
+  xy: 127, 12
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
@@ -69,9 +69,72 @@ sprites/player
   orig: 30, 30
   offset: 0, 0
   index: 0
+sprites/player_armor
+  rotate: false
+  xy: 76, 29
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+sprites/player_shoot
+  rotate: false
+  xy: 108, 29
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+sprites/player_speed
+  rotate: false
+  xy: 140, 29
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+sprites/player_turn
+  rotate: false
+  xy: 172, 29
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+sprites/playerbullet
+  rotate: false
+  xy: 204, 30
+  size: 7, 7
+  orig: 7, 7
+  offset: 0, 0
+  index: 0
+sprites/pup_defense
+  rotate: false
+  xy: 204, 39
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: 0
+sprites/pup_shoot
+  rotate: false
+  xy: 226, 39
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: 0
+sprites/pup_speed
+  rotate: false
+  xy: 44, 7
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: 0
+sprites/pup_turn
+  rotate: false
+  xy: 66, 7
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: 0
 sprites/spearer
   rotate: false
-  xy: 76, 39
+  xy: 88, 7
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
