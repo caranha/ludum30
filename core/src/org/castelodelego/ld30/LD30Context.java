@@ -2,6 +2,7 @@ package org.castelodelego.ld30;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -112,6 +113,7 @@ public enum LD30Context {
         ret.setMaxLife(3600);
         ret.setHitPoints(3);
         ret.setCollisionType(Entity.CollisionType.PLAYER);
+        ret.setDeathSound(Globals.assetManager.get("sounds/Death.ogg", Sound.class));
         return ret;
     }
 

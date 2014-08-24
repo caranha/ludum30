@@ -1,6 +1,7 @@
 package org.castelodelego.ld30.Gameplay;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -41,6 +42,8 @@ public class Entity {
     // AI
     Navigator navigator;
     Array<Entity> childArray = null;
+
+    Sound deathSound = null;
 
 
     boolean destroyFlag;
@@ -200,6 +203,8 @@ public class Entity {
     public Color getColor() { return hue; }
 
     public void setDestroyed() {
+        if ((deathSound != null) && (destroyFlag==false))
+            deathSound.play();
         destroyFlag = true;
     }
     public boolean getDestroyed() {
@@ -208,6 +213,8 @@ public class Entity {
 
     public void setPickup(Pickup p) { pickup = p;}
     public Pickup getPickup() { return pickup; }
+
+    public void setDeathSound(Sound s) { deathSound = s;}
 
     public void dispose() {
         if (navigator != null)

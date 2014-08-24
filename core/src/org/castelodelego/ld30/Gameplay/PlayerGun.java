@@ -1,5 +1,6 @@
 package org.castelodelego.ld30.Gameplay;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import org.castelodelego.ld30.Globals;
@@ -12,9 +13,11 @@ public class PlayerGun {
     final float shootTimeOut = 0.4f;
     float shootTimer = 0;
     Animation bulletAnimation;
+    Sound pew;
 
     public PlayerGun()
     {
+        pew = Globals.assetManager.get("sounds/Laser.ogg",Sound.class);
         bulletAnimation = Globals.animationManager.get("sprites/playerbullet");
     }
 
@@ -25,6 +28,7 @@ public class PlayerGun {
         {
             shootTimer = 0;
             p.addChild(createBullet(p));
+            pew.play();
         }
     }
 

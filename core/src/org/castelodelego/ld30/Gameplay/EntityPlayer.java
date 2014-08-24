@@ -1,6 +1,7 @@
 package org.castelodelego.ld30.Gameplay;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -29,6 +30,10 @@ public class EntityPlayer extends Entity {
 
     PlayerGun playerGun;
 
+    Sound teleportSound;
+    Sound coinSound;
+
+
     public EntityPlayer(float maxWidth, float maxHeight)
     {
         super();
@@ -39,6 +44,9 @@ public class EntityPlayer extends Entity {
         layer_shoot = Globals.animationManager.get("sprites/player_shoot");
         layer_speed = Globals.animationManager.get("sprites/player_speed");
         layer_turn = Globals.animationManager.get("sprites/player_turn");
+
+        teleportSound = Globals.assetManager.get("sounds/Teleport.ogg",Sound.class);
+        coinSound = Globals.assetManager.get("sounds/Coin.ogg",Sound.class);
     }
 
     @Override
@@ -60,6 +68,7 @@ public class EntityPlayer extends Entity {
         {
 
             case KEY:
+                coinSound.play();
                 LD30Context.getInstance().addPickup(goodies);
                 switch(goodies.keyType)
                 {
@@ -76,6 +85,7 @@ public class EntityPlayer extends Entity {
                 break;
 
             case SHOOTER:
+                coinSound.play();
                 if (!hasWeapon) {
                     TextRenderer.addMessage("Pew! Pew! Pew!");
                     playerGun = new PlayerGun();
@@ -87,6 +97,7 @@ public class EntityPlayer extends Entity {
                 break;
 
             case SPEED_UP:
+                coinSound.play();
                 if (!hasSpeed) {
                     TextRenderer.addMessage("Go Faster!");
                     hasSpeed = true;
@@ -99,6 +110,7 @@ public class EntityPlayer extends Entity {
                 break;
 
             case TURN_UP:
+                coinSound.play();
                 if (!hasTurn) {
                     hasTurn = true;
                     rotationSpeed += 90;
@@ -111,6 +123,7 @@ public class EntityPlayer extends Entity {
                 break;
 
             case SHIELD:
+                coinSound.play();
                 if (!hasArmor) {
                     hasArmor = true;
                     hitPoints += 5;
@@ -122,6 +135,7 @@ public class EntityPlayer extends Entity {
                 break;
 
             case DIAMOND:
+                coinSound.play();
                 LD30Context.getInstance().addPickup(goodies);
                 switch(Globals.behaviorDice.nextInt(5))
                 {
@@ -144,6 +158,7 @@ public class EntityPlayer extends Entity {
                 break;
 
             case EXIT:
+                teleportSound.play();
                 escaped = true;
                 break;
         }

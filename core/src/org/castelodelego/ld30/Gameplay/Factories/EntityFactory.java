@@ -1,5 +1,6 @@
 package org.castelodelego.ld30.Gameplay.Factories;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import org.castelodelego.ld30.GPSRandom;
@@ -38,6 +39,7 @@ public class EntityFactory {
         ret.setMaxLife(FOREVER);
         ret.setNavigator(new LazyNavigator(p,200+40*difficulty,(difficulty > 2?true:false)));
         ret.setCollisionType(Entity.CollisionType.ENEMY);
+        ret.setDeathSound(Globals.assetManager.get("sounds/Death_Enemy.ogg", Sound.class));
         return ret;
     }
 
@@ -108,6 +110,7 @@ public class EntityFactory {
         ret.setColor(pickColor(c%3));
         ret.setMaxLife(FOREVER);
         ret.setCollisionType(Entity.CollisionType.WALL);
+        ret.setDeathSound(Globals.assetManager.get("sounds/Unlock.ogg", Sound.class));
         return ret;
     }
 
