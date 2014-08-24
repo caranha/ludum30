@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -71,6 +72,10 @@ public class LD30Game extends Game {
         Globals.assetManager.load("sounds/Laser.ogg", Sound.class);
         Globals.assetManager.load("sounds/Teleport.ogg", Sound.class);
         Globals.assetManager.load("sounds/Unlock.ogg", Sound.class);
+
+        Globals.assetManager.load("sounds/Game1.ogg", Music.class);
+        Globals.assetManager.load("sounds/Game2.ogg", Music.class);
+        Globals.assetManager.load("sounds/title.ogg", Music.class);
     }
 
     public static void loadScreens()

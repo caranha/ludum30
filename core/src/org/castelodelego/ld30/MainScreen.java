@@ -73,6 +73,10 @@ public class MainScreen implements Screen {
 
             if (startButton.contains(touchPos.x,touchPos.y)) {
                 lastGameScreen = new GameScreen(new GPSRandom(LD30Game.gps.getLocation()));
+                if (Globals.behaviorDice.nextDouble() < 0.5)
+                    Globals.playGame1();
+                else
+                    Globals.playGame2();
                 ((Game) Gdx.app.getApplicationListener()).setScreen(lastGameScreen);
                 return;
             }
@@ -118,7 +122,7 @@ public class MainScreen implements Screen {
                 readingText = "\nAbout the game\n\n\nThis game was made in 48 hours for the Ludum Dare game jam. " +
                         "All the code and assets were made from scratch. Feel free to modify and distribute.\n\n\n" +
                         "This game was made in Java using the LibGDX library. Graphics were made on GIMP, and sounds " +
-                        "on bfxr and BoscaCeoil.\n\n\nLearn more at http://www.ludumdare.com/compo";
+                        "on bfxr and Abundant Music.\n\n\nLearn more at http://www.ludumdare.com/compo";
             }
 
         }
@@ -229,6 +233,7 @@ public class MainScreen implements Screen {
 
 	@Override
 	public void show() {
+        Globals.playTitle();
         timeout = 0;
 	}
 
