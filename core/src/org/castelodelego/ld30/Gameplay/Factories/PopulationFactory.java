@@ -47,6 +47,13 @@ public class PopulationFactory {
             ret.add(w);
         }
 
+        for (int i = 0; i < total/3; i++)
+        {
+            Entity w = EntityFactory.diamond();
+            w.setPosition(new Vector2(dice.nextInt(400)+100,dice.nextInt(400+100)));
+            ret.add(w);
+        }
+
         Entity w = EntityFactory.key(color+1);
         w.setPosition(new Vector2(dice.nextInt(300+150),dice.nextInt(300+150)));
         ret.add(w);
@@ -56,8 +63,15 @@ public class PopulationFactory {
     static public Array<Entity> populateVault(GPSRandom dice, int color, Entity player, int difficulty)
     {
         Array<Entity> ret = new Array<Entity>();
-
+        int total = 6+difficulty+combo(dice,difficulty+1);
         Entity w;
+
+        for (int i = 0; i < total; i++)
+        {
+            w = EntityFactory.diamond();
+            w.setPosition(new Vector2(dice.nextInt(400)+100,dice.nextInt(400+100)));
+            ret.add(w);
+        }
 
         w = EntityFactory.key(color+1);
         w.setPosition(new Vector2(dice.nextInt(300+150),dice.nextInt(300+150)));

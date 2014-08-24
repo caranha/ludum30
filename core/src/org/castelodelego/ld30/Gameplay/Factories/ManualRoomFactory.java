@@ -152,8 +152,8 @@ public class ManualRoomFactory {
         boolean disco = false;
         if (dice.nextDouble() < 0.3) disco = true;
 
-        int[] positionX = {  0, 1, 2, 3, 4, 5, 6, 7, 8, 9,12,13,14,15,16,17,18,19};
-        int[] positionY = { 14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14};
+        int[] positionX = {  -2,-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,12,13,14,15,16,17,18,19,20,21};
+        int[] positionY = { 14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14};
 
         Array<Entity> ret = new Array<Entity>();
         for (int i = 0; i < positionX.length;i++)

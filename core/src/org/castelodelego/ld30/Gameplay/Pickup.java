@@ -8,7 +8,7 @@ import org.castelodelego.ld30.LD30Context;
  */
 public class Pickup {
 
-    public enum PickupType {KEY, SHOOTER, SPEED_UP, TURN_UP, SHIELD, EXIT}
+    public enum PickupType {KEY, SHOOTER, SPEED_UP, TURN_UP, SHIELD, DIAMOND, EXIT}
 
     PickupType pickupType;
     LD30Context.KEYS keyType;

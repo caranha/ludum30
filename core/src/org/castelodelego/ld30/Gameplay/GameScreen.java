@@ -16,6 +16,8 @@ import org.castelodelego.ld30.Gameplay.Factories.StageFactory;
 import org.castelodelego.ld30.Globals;
 import org.castelodelego.ld30.LD30Context;
 import org.castelodelego.ld30.LD30Game;
+import org.castelodelego.ld30.parallax.ParallaxBackground;
+import org.castelodelego.ld30.parallax.ParallaxFactory;
 
 import java.util.Iterator;
 
@@ -23,6 +25,9 @@ import java.util.Iterator;
  * Created by caranha on 8/23/14.
  */
 public class GameScreen implements com.badlogic.gdx.Screen {
+
+    static Color BorderWhite = new Color(1f,1f,1f,.7f);
+    static Color BorderBlack = new Color(1f,1f,1f,0f);
 
     enum GameState { PLAYING, ENDING }
     GameState gameState;
@@ -42,6 +47,8 @@ public class GameScreen implements com.badlogic.gdx.Screen {
 
     float worldViewWidth = 480;
     float worldViewHeight = 800;
+
+    //ParallaxBackground stars;
 
 
     public GameScreen(GPSRandom creator)
@@ -63,6 +70,8 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         for (Entity aux:props)
             addEntity(aux);
 
+        //stars = ParallaxFactory.getDefaultBackground();
+
     }
 
     void setupPlayer()
@@ -70,13 +79,13 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         player = new EntityPlayer(600,2400);
         player.setAnimation(Globals.animationManager.get("sprites/player"));
         player.setPosition(new Vector2(300,300));
-        player.setHitBoxAnimation();
+        player.setHitBoxSize(25,25);
         player.setRotation(0);
         player.setRotationSpeed(120);
-        player.setMoveSpeed(120);
+        player.setMoveSpeed(140);
         player.setColor(Color.WHITE);
         player.setMaxLife(60);
-        player.setHitPoints(2000); //DEBUG
+        player.setHitPoints(5); //DEBUG
         playerControl = new PositionNavigator();
         player.setNavigator(playerControl);
         player.setCollisionType(Entity.CollisionType.PLAYER);
@@ -93,6 +102,7 @@ public class GameScreen implements com.badlogic.gdx.Screen {
                                       "  Green: "+LD30Context.getInstance().testKey(LD30Context.KEYS.GREEN)+
                                       "  Blue: "+LD30Context.getInstance().testKey(LD30Context.KEYS.BLUE));
 
+        Globals.log.addMessage("Score", "Score: "+LD30Context.getInstance().getCurrentScore());
 
         if (Gdx.input.isTouched())
         {
@@ -108,6 +118,12 @@ public class GameScreen implements com.badlogic.gdx.Screen {
                     entityList.removeValue(player,true);
                     deathTime = playTime;
                     gameState = GameState.ENDING;
+
+                    if (player.getEscaped())  {
+                        LD30Context.getInstance().doEscape();
+                    } else {
+                        LD30Context.getInstance().doDeath();
+                    }
                 }
                 break;
             case ENDING:
@@ -119,9 +135,13 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         }
 
         processEntities(delta);
+
+
+        //stars.render(delta);
         renderText(delta);
         renderSprites(delta);
-        renderDebug(delta);
+        //renderDebug(delta);
+        renderBorders(delta);
 
     }
 
@@ -155,7 +175,14 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         for (Entity aux:newEntities)
             addEntity(aux);
 
-        gameCamera.translate(player.position.x - gameCamera.position.x, player.position.y - gameCamera.position.y);
+        gameCamera.position.x = player.position.x;
+        gameCamera.position.y = player.position.y;
+
+        if (gameCamera.position.x < worldViewWidth/2 - 50) gameCamera.position.x = worldViewWidth/2 - 50;
+        if (gameCamera.position.x > 650-worldViewWidth/2) gameCamera.position.x = 650-worldViewWidth/2;
+        if (gameCamera.position.y < worldViewHeight/2 - 50) gameCamera.position.y = worldViewHeight/2 - 50;
+        if (gameCamera.position.y > 2450-worldViewHeight/2) gameCamera.position.y = 2450-worldViewHeight/2;
+
         gameCamera.update();
     }
 
@@ -167,8 +194,6 @@ public class GameScreen implements com.badlogic.gdx.Screen {
                 joystixMedium.draw(Globals.batch,"You're Dead",100,uiCamera.viewportHeight/4);
         Globals.batch.end();
     }
-
-
     private void renderSprites(float delta) {
         Globals.batch.setProjectionMatrix(gameCamera.combined);
         Globals.batch.begin();
@@ -185,6 +210,21 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         {
             aux.drawDebug(Globals.debugRenderer);
         }
+        Globals.debugRenderer.end();
+    }
+
+    private void renderBorders(float delta) {
+
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Globals.debugRenderer.setProjectionMatrix(gameCamera.combined);
+        Globals.debugRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        Globals.debugRenderer.rect(-50,-50,700,50,BorderWhite,BorderWhite,BorderBlack,BorderBlack);
+        Globals.debugRenderer.rect(-50,2400,700,50,BorderBlack,BorderBlack,BorderWhite,BorderWhite);
+
+        Globals.debugRenderer.rect(-50,-50,50,2500,BorderWhite,BorderBlack,BorderBlack,BorderWhite);
+        Globals.debugRenderer.rect(600,-50,50,2500,BorderBlack,BorderWhite,BorderWhite,BorderBlack);
+
         Globals.debugRenderer.end();
     }
 

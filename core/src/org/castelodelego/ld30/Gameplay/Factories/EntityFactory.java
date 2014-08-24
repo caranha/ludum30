@@ -30,7 +30,7 @@ public class EntityFactory {
     public static Entity lazyFollower(Entity p, int difficulty) {
         Entity ret = new Entity();
         ret.setAnimation(Globals.animationManager.get("sprites/spearer"));
-        ret.getHitBox().setSize(17,17);
+        ret.getHitBox().setSize(15,15);
         ret.setRotationSpeed(90+5*difficulty);
         ret.setMoveSpeed(90+5*difficulty);
         ret.setColor(pickColor(difficulty));
@@ -46,6 +46,17 @@ public class EntityFactory {
         ret.setHitBoxSize(38,38);
         ret.setColor(pickColor(c%3));
         ret.setPickup(new Pickup(Pickup.PickupType.KEY,0,pickKey(c)));
+        ret.setMaxLife(FOREVER);
+        ret.setCollisionType(Entity.CollisionType.PICKUP);
+        return ret;
+    }
+
+    public static Entity diamond() {
+        Entity ret = new Entity();
+        ret.setAnimation(Globals.animationManager.get("sprites/diamond"));
+        ret.setHitBoxSize(14,14);
+        ret.setColor(Color.WHITE);
+        ret.setPickup(new Pickup(Pickup.PickupType.DIAMOND,0,null));
         ret.setMaxLife(FOREVER);
         ret.setCollisionType(Entity.CollisionType.PICKUP);
         return ret;

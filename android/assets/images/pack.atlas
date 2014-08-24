@@ -3,29 +3,81 @@ pack.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-sprites/key
+background/Layer0
   rotate: false
   xy: 2, 2
+  size: 600, 1000
+  orig: 600, 1000
+  offset: 0, 0
+  index: -1
+
+pack2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+background/Layer1
+  rotate: false
+  xy: 2, 2
+  size: 600, 1000
+  orig: 600, 1000
+  offset: 0, 0
+  index: -1
+
+pack3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+sprites/diamond
+  rotate: false
+  xy: 2, 2
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 0
+sprites/diamond
+  rotate: false
+  xy: 98, 44
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 1
+sprites/diamond
+  rotate: false
+  xy: 19, 2
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 2
+sprites/diamond
+  rotate: false
+  xy: 44, 12
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 3
+sprites/key
+  rotate: false
+  xy: 2, 19
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: 0
 sprites/player
   rotate: false
-  xy: 44, 2
-  size: 40, 40
-  orig: 40, 40
+  xy: 44, 29
+  size: 30, 30
+  orig: 30, 30
   offset: 0, 0
   index: 0
 sprites/spearer
   rotate: false
-  xy: 86, 22
+  xy: 76, 39
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: 0
 
-pack2.png
+pack4.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none

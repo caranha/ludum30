@@ -39,7 +39,7 @@ public class AnimationManager extends HashMap<String,Animation>{
 		for(int i = 0; i < a.size; i++)
 			if (a.get(i).index == 0) // is "a" an animation? (-1 if not an animation, other number if middle of the animation
 			{
-				time = 0.05f;
+				time = 0.20f;
 				this.put(a.get(i).name, new Animation(time,pack.createSprites(a.get(i).name),PlayMode.LOOP));
 			}
 		return true;

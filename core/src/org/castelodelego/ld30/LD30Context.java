@@ -17,16 +17,12 @@ public enum LD30Context {
     public enum KEYS { RED, GREEN, BLUE };
     EnumSet<KEYS> hasKeys;
 
-    Pickup[] playerCurrentPickups;
-    Array<Pickup> pickupList;
-
-    Array<Pickup> test;
+    int currentScore;
+    int maxScore;
 
     LD30Context()
     {
         hasKeys = EnumSet.noneOf(KEYS.class);
-        playerCurrentPickups = new Pickup[4];
-        pickupList = new Array<Pickup>();
     }
 
     // Static getter
@@ -39,9 +35,8 @@ public enum LD30Context {
     public void reset()
     {
         hasKeys.clear();
-        for (int i = 0; i < 4; i++)
-            playerCurrentPickups[i] = null;
-        pickupList.clear();
+        maxScore = 0;
+        currentScore = 0;
     }
 
     public boolean addPickup(Pickup p)
@@ -51,20 +46,30 @@ public enum LD30Context {
             return false;
         }
 
-        if (p.getPickupType() == Pickup.PickupType.KEY) {
-            hasKeys.add(p.getKeyType());
-            return true;
+        switch (p.getPickupType())
+        {
+            case KEY:
+                hasKeys.add(p.getKeyType());
+                return true;
+            case DIAMOND:
+                currentScore += 100;
+                return true;
+            default:
+                currentScore += 200;
+                return true;
         }
+    }
 
-        if (pickupList.size < MAX_PICKUPS) {
-            pickupList.add(p);
-            return true;
-        }
-        else {
-            Gdx.app.log("INFORMATION:","Too many Pickups, this one was dropped");
-            return false;
-            // TODO: Add logic to replace lower level pickups
-        }
+    public void doDeath()
+    {
+        currentScore = 0;
+        hasKeys.clear();
+    }
+
+    public void doEscape()
+    {
+        if (currentScore > maxScore)
+            maxScore = currentScore;
     }
 
     public boolean testKey(KEYS k) {
@@ -73,5 +78,7 @@ public enum LD30Context {
     public void removeKey(KEYS k) {
         hasKeys.remove(k);
     }
+    public int getCurrentScore() { return currentScore; }
+    public int getMaxScore() { return maxScore; }
 
 }
