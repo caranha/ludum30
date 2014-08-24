@@ -1,0 +1,98 @@
+GEOQUEST
+
+
+
+
+* FEATURE LIST
+
+- [X] Draw Player Sprite
+- [X] Draw Basic Enemy Sprite
+- [X] Draw Basic Tree Sprite
+- [X] Add Joystick font to the game
+- [X] Create title Screen with Joystick font and "Click to Start"
+- [X] Entity Class (base enemy)
+- [X] AI - Move Straight
+- [X] AI - Move Towards "Target"
+- [X] AI - Move to Position
+- [X] doHit - entities lose "lifes" and die when hit by enemy entities
+- [X] doRepulse - colliding entity move away from hitboxes
+- [X] LazyFollow AI - follows target if target is whithin a certain distance (parameter give up)
+
+- [X] Add GameContext - singleton - make Gamecontext Hold keys
+- [X] Add CollisionRule for Sending Pickups to Player
+- [X] Player object receives Pickups (keys) and sends them to Context
+- [X] Add "Door" object - if player is nearby with key, dies
+- [X] Made a simple 1x1 Wall Texture
+- [X] Made a horizontal Door Texture
+- [X] Add an "Escape" object -- send a "escaped" message to the GameScene
+
+- [X] Entity Factory
+- [X] GameScreen Factory (Screens)
+- [X] Limit Player Movement on World
+- [X] GameScrene Populator (difficulties)
+- [X] Limit Camera Movement on World
+- [X] Add Limit Fog
+
+- [X] Diamond Object
+- [X] Diamond Pickup (stats at LD30Context)
+- [X] Permanent Player - created and rescued from LD30Context
+- [X] Total Score This run, added when player survives a mission, zeroed when player is dead
+- [X] Max Score;
+- [X] Persistent LD30Context
+- [X] Gameplay Text Renderer 
+- [X] Power Ups
+  - [X] Entities (Armor, Speed, Turn, Bullet)
+  - [X] Modification on Player (Armor, Speed, Turn)
+  - [X] Bullet image
+  - [X] Bullet implementation
+- [X] New Main Menu Screen
+  - Title, coordinates, high score, Start Button, My Ship, Help, About.
+  - Show Overtext when "Help, About, My Ship"
+- [X] Sounds
+- [X] Music
+- [X] Death Explosion
+- [X] Death Children System
+
+
+
+=======================================================================
+
+- [ ] Strange bug -- sometimes power ups come out of nowhere
+- [ ] Bug -- power up configuration won't load/save to/from preferences
+
+=======================================================================
+- [ ] Add shooting enemies;
+- [ ] Add power up levels
+- [ ] Room loading from images/pixels
+- [ ] Generate Random names for worlds
+- [ ] Preview stats for worlds
+- [ ] Starry background
+- [ ] Music selected using the GPS random number generation
+- [ ] Track how much you walked
+
+===========================================================================================================
+
+* Enemy generation ideas
+- Walking Enemy
+- Shooting enemy
+- Mob AI - follow target, follow route, stand
+- Bullets kill enemies and players equally, but they have a "parent" that they don't kill
+- Bombs
+
+* World Generation ideas
+- Each world contains a large number of floors, which get harder as you go down;
+- Random seed selects a number of "set pieces" (collections of walls and props)
+- Set piece dictionary
+  - Size
+  - Base difficulty
+  - Set pieces have a varied number of enemies and loot in it
+
+* Player Boost ideas
+- Player can use four boosts - they are assigned automatically. Player can throw them away to assign new boosts;
+- There is a list of the boosts that the player has;
+- Player also has a list of banners (achievements)
+
+* Player Boost list (All boosts are level based)
+- Triple Gun
+- Machine Gun 
+- Shotgun
