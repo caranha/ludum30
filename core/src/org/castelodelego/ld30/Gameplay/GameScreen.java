@@ -9,13 +9,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.utils.Array;
 import org.castelodelego.ld30.GPSRandom;
 import org.castelodelego.ld30.Globals;
+import org.castelodelego.ld30.LD30Context;
 import org.castelodelego.ld30.LD30Game;
 
-import javax.swing.text.Position;
 import java.util.Iterator;
 
 /**
@@ -64,7 +63,7 @@ public class GameScreen implements com.badlogic.gdx.Screen {
 
     void setupPlayer()
     {
-        player = new Entity();
+        player = new EntityPlayer();
         player.setAnimation(Globals.animationManager.get("sprites/player"));
         player.setPosition(new Vector2(0, 0));
         player.setHitBoxAnimation();
@@ -81,6 +80,7 @@ public class GameScreen implements com.badlogic.gdx.Screen {
 
     void setupEnemies()
     {
+        // Lazy Enemies
         for (int i = 0; i < 1; i++)
         {
             Entity test2 = new Entity();
@@ -89,22 +89,55 @@ public class GameScreen implements com.badlogic.gdx.Screen {
             test2.setHitBoxAnimation();
             test2.setRotationSpeed(100);
             test2.setMoveSpeed(100);
-            test2.setColor(Color.BLUE);
+            test2.setColor(Color.RED);
             test2.setMaxLife(30);
-            TargetNavigator playerFollow = new TargetNavigator();
-            playerFollow.setTarget(player);
+            Navigator playerFollow = new LazyNavigator(player,200,true);
             test2.setNavigator(playerFollow);
             test2.setCollisionType(Entity.CollisionType.ENEMY);
             addEntity(test2);
         }
 
-        for (int i = 0; i < 4; i++)
+        // Walls
+        for (int i = 0; i < 1; i++)
         {
             Entity test2 = new Entity();
             test2.setAnimation(Globals.animationManager.get("props/wall_1x2"));
             test2.setPosition(new Vector2(player.getPosition().x + gpsDice.nextInt(500) - 250, player.getPosition().y + gpsDice.nextInt(500) - 250));
             test2.setHitBoxAnimation();
             test2.setColor(Color.GREEN);
+            test2.setMaxLife(8000);
+            test2.setRotation(90);
+            test2.setCollisionType(Entity.CollisionType.WALL);
+            addEntity(test2);
+        }
+
+        // Keys
+        for (int i = 0; i < 1; i++)
+        {
+            Entity test2 = new Entity();
+            test2.setAnimation(Globals.animationManager.get("sprites/key"));
+            test2.setPosition(new Vector2(player.getPosition().x + gpsDice.nextInt(500) - 250, player.getPosition().y + gpsDice.nextInt(500) - 250));
+            test2.setHitBoxAnimation();
+
+            test2.setColor(Color.BLUE);
+            test2.setPickup(new Pickup(Pickup.PickupType.KEY,0, LD30Context.KEYS.BLUE));
+
+            test2.setMaxLife(8000);
+            test2.setRotation(90);
+            test2.setRotationSpeed(20);
+            test2.setCollisionType(Entity.CollisionType.PICKUP);
+            addEntity(test2);
+        }
+
+        // Doors
+        // Walls
+        for (int i = 0; i < 2; i++)
+        {
+            Entity test2 = new EntityDoor(player, LD30Context.KEYS.BLUE);
+            test2.setAnimation(Globals.animationManager.get("props/door_1x2"));
+            test2.setPosition(new Vector2(player.getPosition().x + gpsDice.nextInt(500) - 250, player.getPosition().y + gpsDice.nextInt(500) - 250));
+            test2.setHitBoxAnimation();
+            test2.setColor(Color.BLUE);
             test2.setMaxLife(8000);
             test2.setRotation(90);
             test2.setCollisionType(Entity.CollisionType.WALL);

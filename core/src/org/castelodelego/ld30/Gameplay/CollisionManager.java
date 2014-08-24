@@ -91,15 +91,20 @@ public class CollisionManager {
             for (Entity aux2:walls) {
                 if (aux1.getHitBox().overlaps(aux2.getHitBox()))
                 {
+                    // FIXME: I can send directly the bounding box here
                     if (aux1.getCollisionType() == Entity.CollisionType.PLAYER)
                         aux1.doRepulse(aux2.getHitBox());
                     else
                         aux1.doHit();
                 }
             }
-            for (Entity aux2:pickups) {
-                // TODO: Adding Pickups
-            }
+
+            if (aux1.getCollisionType() == Entity.CollisionType.PLAYER)
+                for (Entity aux2:pickups)
+                    if (aux1.getHitBox().overlaps(aux2.getHitBox())) {
+                        ((EntityPlayer) aux1).addPickup(aux2.getPickup());
+                        aux2.setDestroyed();
+                    }
         }
 
         for (Entity aux1:enemies) {

@@ -17,8 +17,6 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Entity {
 
-
-
     public enum CollisionType { PLAYER, ENEMY, PLAYERBULLET, ENEMYBULLET, WALL, PICKUP, NONE};
     CollisionType collisionType;
 
@@ -27,6 +25,7 @@ public class Entity {
 
     Rectangle hitBox;
     Vector2 position;
+    Pickup pickup;
 
     // timed Attributes
     float lifeTime;
@@ -205,6 +204,9 @@ public class Entity {
     public boolean getDestroyed() {
         return destroyFlag;
     }
+
+    public void setPickup(Pickup p) { pickup = p;}
+    public Pickup getPickup() { return pickup; }
 
     public void dispose() {
         if (navigator != null)

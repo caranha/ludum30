@@ -49,5 +49,7 @@ public class Globals {
         double[] pos = LD30Game.gps.getLocation();
 
         log = new LogOverlay();
+
+        LD30Context.getInstance();
 	}		
 }
