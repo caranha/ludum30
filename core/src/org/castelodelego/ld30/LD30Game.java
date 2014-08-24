@@ -59,6 +59,11 @@ public class LD30Game extends Game {
         fontParams.fontParameters.size = 40;
         Globals.assetManager.load("Joystix40.ttf", BitmapFont.class, fontParams);
 
+        fontParams = new FreeTypeFontLoaderParameter();
+        fontParams.fontFileName = "fonts/Joystix.ttf";
+        fontParams.fontParameters.size = 10;
+        Globals.assetManager.load("Joystix10.ttf", BitmapFont.class, fontParams);
+
     }
 
     public static void loadScreens()

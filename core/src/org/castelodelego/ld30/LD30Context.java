@@ -1,7 +1,12 @@
 package org.castelodelego.ld30;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import org.castelodelego.ld30.Gameplay.Entity;
+import org.castelodelego.ld30.Gameplay.EntityPlayer;
 import org.castelodelego.ld30.Gameplay.Pickup;
 import java.util.EnumSet;
 
@@ -20,9 +25,12 @@ public enum LD30Context {
     int currentScore;
     int maxScore;
 
+    EntityPlayer player;
+
     LD30Context()
     {
         hasKeys = EnumSet.noneOf(KEYS.class);
+        loadFromPreferences();
     }
 
     // Static getter
@@ -64,12 +72,16 @@ public enum LD30Context {
     {
         currentScore = 0;
         hasKeys.clear();
+        player = getNewPlayer();
+        saveToPreferences();
     }
 
     public void doEscape()
     {
         if (currentScore > maxScore)
             maxScore = currentScore;
+        resetPlayer();
+        saveToPreferences();
     }
 
     public boolean testKey(KEYS k) {
@@ -80,5 +92,56 @@ public enum LD30Context {
     }
     public int getCurrentScore() { return currentScore; }
     public int getMaxScore() { return maxScore; }
+
+    public void resetPlayer()
+    {
+        player.reset();
+        player.setPosition(new Vector2(300, 300));
+    }
+
+    public EntityPlayer getNewPlayer()
+    {
+        EntityPlayer ret = new EntityPlayer(600,2400);
+        ret.setAnimation(Globals.animationManager.get("sprites/player"));
+        ret.setPosition(new Vector2(300, 300));
+        ret.setHitBoxSize(25, 25);
+        ret.setRotation(0);
+        ret.setRotationSpeed(120);
+        ret.setMoveSpeed(140);
+        ret.setColor(Color.WHITE);
+        ret.setMaxLife(3600);
+        ret.setHitPoints(3);
+        ret.setCollisionType(Entity.CollisionType.PLAYER);
+        return ret;
+    }
+
+    public EntityPlayer getPlayer() {
+        if (player == null)
+            player = getNewPlayer();
+        return player;
+    }
+
+    private void saveToPreferences() {
+        Preferences pref = Gdx.app.getPreferences("GameContext");
+        pref.putBoolean("RedKey",testKey(KEYS.RED));
+        pref.putBoolean("GreenKey",testKey(KEYS.GREEN));
+        pref.putBoolean("BlueKey",testKey(KEYS.BLUE));
+        pref.putInteger("CurrentScore",currentScore);
+        pref.putInteger("MaxScore",maxScore);
+        pref.flush();
+    }
+
+    private void loadFromPreferences() {
+        Preferences pref = Gdx.app.getPreferences("GameContext");
+        if (pref.getBoolean("RedKey",false))
+            hasKeys.add(KEYS.RED);
+        if (pref.getBoolean("GreenKey",false))
+            hasKeys.add(KEYS.GREEN);
+        if (pref.getBoolean("BlueKey",false))
+            hasKeys.add(KEYS.BLUE);
+
+        currentScore = pref.getInteger("CurrentScore",0);
+        maxScore = pref.getInteger("MaxScore",0);
+    }
 
 }

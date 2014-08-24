@@ -102,6 +102,13 @@ props/exit
   orig: 80, 80
   offset: 0, 0
   index: 0
+props/minikey
+  rotate: false
+  xy: 64, 8
+  size: 11, 24
+  orig: 11, 24
+  offset: 0, 0
+  index: 0
 props/simplewall_30x30
   rotate: false
   xy: 84, 22

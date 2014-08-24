@@ -39,7 +39,19 @@ public class EntityDoor extends Entity {
             } else {
                 if (lifeTime - warningTimeStamp > warningTimeOut) {
                     warningTimeStamp = lifeTime;
-                    Gdx.app.log("DOOR","Player does not have the right key to open the door");
+                    switch (doorColor)
+                    {
+
+                        case RED:
+                            TextRenderer.addMessage("You need a Red Key\nto open this door");
+                            break;
+                        case GREEN:
+                            TextRenderer.addMessage("You need a Green Key\nto open this door");
+                            break;
+                        case BLUE:
+                            TextRenderer.addMessage("You need a Blue Key\nto open this door");
+                            break;
+                    }
                 }
             }
     }

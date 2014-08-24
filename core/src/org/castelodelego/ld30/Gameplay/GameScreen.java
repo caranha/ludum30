@@ -36,14 +36,13 @@ public class GameScreen implements com.badlogic.gdx.Screen {
 
     Array<Entity> entityList;
     CollisionManager collisionManager = new CollisionManager();
-    BitmapFont joystixMedium = Globals.assetManager.get("Joystix20.ttf",BitmapFont.class);
 
     PositionNavigator playerControl;
     EntityPlayer player;
-    GPSRandom gpsDice;
 
     OrthographicCamera uiCamera;
     OrthographicCamera gameCamera;
+    TextRenderer uiRenderer;
 
     float worldViewWidth = 480;
     float worldViewHeight = 800;
@@ -51,45 +50,34 @@ public class GameScreen implements com.badlogic.gdx.Screen {
     //ParallaxBackground stars;
 
 
-    public GameScreen(GPSRandom creator)
+    public GameScreen(GPSRandom dice)
     {
         deathTime = 0;
         playTime = 0;
         gameState = GameState.PLAYING;
-        gpsDice = creator;
-
 
         entityList = new Array<Entity>(false,20);
         gameCamera = new OrthographicCamera();
         uiCamera = new OrthographicCamera();
         gameCamera.setToOrtho(false,worldViewWidth,worldViewHeight);
         uiCamera.setToOrtho(false,worldViewWidth,worldViewHeight);
+        uiRenderer = new TextRenderer();
 
-        setupPlayer();
-        Array<Entity> props = StageFactory.createLevel(creator,player);
-        for (Entity aux:props)
-            addEntity(aux);
-
-        //stars = ParallaxFactory.getDefaultBackground();
-
+        setupWorld(dice);
     }
 
-    void setupPlayer()
+    void setupWorld(GPSRandom dice)
     {
-        player = new EntityPlayer(600,2400);
-        player.setAnimation(Globals.animationManager.get("sprites/player"));
-        player.setPosition(new Vector2(300,300));
-        player.setHitBoxSize(25,25);
-        player.setRotation(0);
-        player.setRotationSpeed(120);
-        player.setMoveSpeed(140);
-        player.setColor(Color.WHITE);
-        player.setMaxLife(60);
-        player.setHitPoints(5); //DEBUG
+        // Player
+        player = LD30Context.getInstance().getPlayer();
         playerControl = new PositionNavigator();
         player.setNavigator(playerControl);
-        player.setCollisionType(Entity.CollisionType.PLAYER);
         addEntity(player);
+
+        // World
+        Array<Entity> props = StageFactory.createLevel(dice,player);
+        for (Entity aux:props)
+            addEntity(aux);
     }
 
     @Override
@@ -97,12 +85,6 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         playTime = playTime+delta;
-
-        Globals.log.addMessage("Keys","Red: "+LD30Context.getInstance().testKey(LD30Context.KEYS.RED)+
-                                      "  Green: "+LD30Context.getInstance().testKey(LD30Context.KEYS.GREEN)+
-                                      "  Blue: "+LD30Context.getInstance().testKey(LD30Context.KEYS.BLUE));
-
-        Globals.log.addMessage("Score", "Score: "+LD30Context.getInstance().getCurrentScore());
 
         if (Gdx.input.isTouched())
         {
@@ -120,14 +102,16 @@ public class GameScreen implements com.badlogic.gdx.Screen {
                     gameState = GameState.ENDING;
 
                     if (player.getEscaped())  {
+                        uiRenderer.setMarquee("You escaped,\nNext Stage!");
                         LD30Context.getInstance().doEscape();
                     } else {
+                        uiRenderer.setMarquee("You died!\nTry again");
                         LD30Context.getInstance().doDeath();
                     }
                 }
                 break;
             case ENDING:
-                if (playTime - deathTime > 1) {
+                if (playTime - deathTime > 2.5) {
                     ((Game) Gdx.app.getApplicationListener()).setScreen(LD30Game.getMainScreen());
                 }
 
@@ -137,12 +121,11 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         processEntities(delta);
 
 
-        //stars.render(delta);
-        renderText(delta);
         renderSprites(delta);
-        //renderDebug(delta);
         renderBorders(delta);
 
+        uiRenderer.update(delta);
+        uiRenderer.render(uiCamera,Globals.batch,Globals.debugRenderer);
     }
 
     private void processEntities(float delta) {
@@ -186,14 +169,6 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         gameCamera.update();
     }
 
-
-    private void renderText(float delta) {
-        Globals.batch.setProjectionMatrix(uiCamera.combined);
-        Globals.batch.begin();
-            if (player.getDestroyed())
-                joystixMedium.draw(Globals.batch,"You're Dead",100,uiCamera.viewportHeight/4);
-        Globals.batch.end();
-    }
     private void renderSprites(float delta) {
         Globals.batch.setProjectionMatrix(gameCamera.combined);
         Globals.batch.begin();
@@ -212,7 +187,6 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         }
         Globals.debugRenderer.end();
     }
-
     private void renderBorders(float delta) {
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
