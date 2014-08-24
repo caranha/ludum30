@@ -154,6 +154,7 @@ public class Entity {
     }
     public Vector2 getPosition()
     {
+        //FIXME: This should be an immutable
         return position;
     }
 
@@ -162,8 +163,8 @@ public class Entity {
         hitBox.setWidth(width);
     }
     public void setHitBoxAnimation() {
-        hitBox.setWidth(animation.getKeyFrame(lifeTime).getRegionWidth());
-        hitBox.setHeight(animation.getKeyFrame(lifeTime).getRegionHeight());
+        hitBox.setWidth(animation.getKeyFrame(lifeTime).getRegionHeight());
+        hitBox.setHeight(animation.getKeyFrame(lifeTime).getRegionWidth());
     }
     public Rectangle getHitBox() {
         return hitBox;

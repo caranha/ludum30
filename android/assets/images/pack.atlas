@@ -29,17 +29,31 @@ pack2.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-props/door_1x2
+props/door_30x60
   rotate: false
-  xy: 2, 2
+  xy: 84, 54
   size: 30, 60
   orig: 30, 60
   offset: 0, 0
   index: 0
-props/wall_1x2
+props/door_60x30
   rotate: false
-  xy: 34, 2
-  size: 30, 60
-  orig: 30, 60
+  xy: 2, 2
+  size: 60, 30
+  orig: 60, 30
+  offset: 0, 0
+  index: 0
+props/exit
+  rotate: false
+  xy: 2, 34
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 0
+props/simplewall_30x30
+  rotate: false
+  xy: 84, 22
+  size: 30, 30
+  orig: 30, 30
   offset: 0, 0
   index: 0

@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import org.castelodelego.ld30.GPSRandom;
+import org.castelodelego.ld30.Gameplay.Factories.ManualRoomFactory;
+import org.castelodelego.ld30.Gameplay.Factories.StageFactory;
 import org.castelodelego.ld30.Globals;
 import org.castelodelego.ld30.LD30Context;
 import org.castelodelego.ld30.LD30Game;
@@ -32,7 +34,7 @@ public class GameScreen implements com.badlogic.gdx.Screen {
     BitmapFont joystixMedium = Globals.assetManager.get("Joystix20.ttf",BitmapFont.class);
 
     PositionNavigator playerControl;
-    Entity player;
+    EntityPlayer player;
     GPSRandom gpsDice;
 
     OrthographicCamera uiCamera;
@@ -57,101 +59,40 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         uiCamera.setToOrtho(false,worldViewWidth,worldViewHeight);
 
         setupPlayer();
-        setupEnemies();
+        Array<Entity> props = StageFactory.createLevel(creator,player);
+        for (Entity aux:props)
+            addEntity(aux);
 
     }
 
     void setupPlayer()
     {
-        player = new EntityPlayer();
+        player = new EntityPlayer(600,2400);
         player.setAnimation(Globals.animationManager.get("sprites/player"));
-        player.setPosition(new Vector2(0, 0));
+        player.setPosition(new Vector2(300,300));
         player.setHitBoxAnimation();
         player.setRotation(0);
         player.setRotationSpeed(120);
         player.setMoveSpeed(120);
         player.setColor(Color.WHITE);
         player.setMaxLife(60);
+        player.setHitPoints(2000); //DEBUG
         playerControl = new PositionNavigator();
         player.setNavigator(playerControl);
         player.setCollisionType(Entity.CollisionType.PLAYER);
         addEntity(player);
     }
 
-    void setupEnemies()
-    {
-        // Lazy Enemies
-        for (int i = 0; i < 1; i++)
-        {
-            Entity test2 = new Entity();
-            test2.setAnimation(Globals.animationManager.get("sprites/spearer"));
-            test2.setPosition(new Vector2(player.getPosition().x+gpsDice.nextInt(500)-250, player.getPosition().y+gpsDice.nextInt(500)-250));
-            test2.setHitBoxAnimation();
-            test2.setRotationSpeed(100);
-            test2.setMoveSpeed(100);
-            test2.setColor(Color.RED);
-            test2.setMaxLife(30);
-            Navigator playerFollow = new LazyNavigator(player,200,true);
-            test2.setNavigator(playerFollow);
-            test2.setCollisionType(Entity.CollisionType.ENEMY);
-            addEntity(test2);
-        }
-
-        // Walls
-        for (int i = 0; i < 1; i++)
-        {
-            Entity test2 = new Entity();
-            test2.setAnimation(Globals.animationManager.get("props/wall_1x2"));
-            test2.setPosition(new Vector2(player.getPosition().x + gpsDice.nextInt(500) - 250, player.getPosition().y + gpsDice.nextInt(500) - 250));
-            test2.setHitBoxAnimation();
-            test2.setColor(Color.GREEN);
-            test2.setMaxLife(8000);
-            test2.setRotation(90);
-            test2.setCollisionType(Entity.CollisionType.WALL);
-            addEntity(test2);
-        }
-
-        // Keys
-        for (int i = 0; i < 1; i++)
-        {
-            Entity test2 = new Entity();
-            test2.setAnimation(Globals.animationManager.get("sprites/key"));
-            test2.setPosition(new Vector2(player.getPosition().x + gpsDice.nextInt(500) - 250, player.getPosition().y + gpsDice.nextInt(500) - 250));
-            test2.setHitBoxAnimation();
-
-            test2.setColor(Color.BLUE);
-            test2.setPickup(new Pickup(Pickup.PickupType.KEY,0, LD30Context.KEYS.BLUE));
-
-            test2.setMaxLife(8000);
-            test2.setRotation(90);
-            test2.setRotationSpeed(20);
-            test2.setCollisionType(Entity.CollisionType.PICKUP);
-            addEntity(test2);
-        }
-
-        // Doors
-        // Walls
-        for (int i = 0; i < 2; i++)
-        {
-            Entity test2 = new EntityDoor(player, LD30Context.KEYS.BLUE);
-            test2.setAnimation(Globals.animationManager.get("props/door_1x2"));
-            test2.setPosition(new Vector2(player.getPosition().x + gpsDice.nextInt(500) - 250, player.getPosition().y + gpsDice.nextInt(500) - 250));
-            test2.setHitBoxAnimation();
-            test2.setColor(Color.BLUE);
-            test2.setMaxLife(8000);
-            test2.setRotation(90);
-            test2.setCollisionType(Entity.CollisionType.WALL);
-            addEntity(test2);
-        }
-
-    }
-
-
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         playTime = playTime+delta;
+
+        Globals.log.addMessage("Keys","Red: "+LD30Context.getInstance().testKey(LD30Context.KEYS.RED)+
+                                      "  Green: "+LD30Context.getInstance().testKey(LD30Context.KEYS.GREEN)+
+                                      "  Blue: "+LD30Context.getInstance().testKey(LD30Context.KEYS.BLUE));
+
 
         if (Gdx.input.isTouched())
         {
@@ -162,7 +103,9 @@ public class GameScreen implements com.badlogic.gdx.Screen {
         switch (gameState)
         {
             case PLAYING:
-                if (player.getDestroyed()) {
+                if (player.getDestroyed()||player.getEscaped()) {
+                    collisionManager.removeEntity(player);
+                    entityList.removeValue(player,true);
                     deathTime = playTime;
                     gameState = GameState.ENDING;
                 }
