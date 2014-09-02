@@ -52,8 +52,6 @@ public class AndroidLocation implements LocationServer {
         }
     }
 
-
-
     @Override
     public double[] getLocation() {
         double[] ret = new double[2];
@@ -72,6 +70,9 @@ public class AndroidLocation implements LocationServer {
 
     @Override
     public String getLocationString() {
+
+        if (lastKnownLocation == null)
+            return "No Location Info :(";
 
         return new StringBuilder()
                 .append("Lon: ").append(String.format("%.4f", lastKnownLocation.getLongitude()))
